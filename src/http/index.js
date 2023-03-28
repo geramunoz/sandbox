@@ -46,7 +46,7 @@ function start (params, callback) {
         if (err) callback(err)
         else {
           let msg = 'Static asset fingerprinting enabled, public/static.json generated'
-          if (result && !restart) update.done(msg)
+          if (result && !restart) update.verbose.done(msg)
           callback()
         }
       })
@@ -70,7 +70,8 @@ function start (params, callback) {
       }
 
       let httpPort = params.ports.http
-      httpServer.listen(httpPort, host || 'localhost', callback)
+      // Node.js 17+ changed DNS lookup behavior for host binding; prefer host to be undefined unless manually specified
+      httpServer.listen(httpPort, host, callback)
     }
   ], callback)
 }

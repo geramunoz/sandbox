@@ -6,7 +6,8 @@ let getFlags = require('./_flags')
 
 module.exports = function cli (options, callback) {
   let flags = getFlags()
-  let params = Object.assign(options, flags)
+  let params = { ...options, ...flags }
+  params.quiet = options.quiet || flags.quiet
   sandbox.start(params, function watching (err) {
     if (err) {
       sandbox.end()
@@ -34,10 +35,10 @@ module.exports = function cli (options, callback) {
     let enable = params.watcher === false ? false : true
     let watcher = watch({ debounce, enable, rehydrate, ts }, params)
     if (watcher) {
-      update.done('Started file watcher')
+      update.done('File watcher now looking for project changes')
     }
 
     // Handle stdin
-    stdin({ rehydrate, update, watcher }, callback)
+    stdin({ rehydrate, update, watcher })
   })
 }

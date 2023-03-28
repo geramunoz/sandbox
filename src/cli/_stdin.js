@@ -1,7 +1,7 @@
 let { emitKeypressEvents } = require('readline')
 let sandbox = require('../')
 
-module.exports = function handleStdin (params, callback) {
+module.exports = function handleStdin (params) {
   let { rehydrate, update, watcher } = params
 
   // Listen for important keystrokes
@@ -33,7 +33,7 @@ module.exports = function handleStdin (params, callback) {
         force: true
       })
     }
-    if (key.sequence === '\u0003') {
+    if (key.sequence === '\u0003' || key.sequence === '\u0004') {
       if (watcher) {
         watcher.close().then(end)
       }
@@ -47,7 +47,6 @@ module.exports = function handleStdin (params, callback) {
         update.err(err)
         process.exit(1)
       }
-      if (callback) callback()
       process.exit(0)
     })
   }
